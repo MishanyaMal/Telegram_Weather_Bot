@@ -4,8 +4,8 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.filters.command import Command
 import aiohttp
 
-API_KEY = 'c6fb0d6fb2d26c84aaa9feaa5c703e8e'
-BOT_TOKEN = '8146333746:AAFw-Jj-BghNwORJ5PUQg8bPFEwMtcDoTGg'
+API_KEY = 'YOUR_API_TOKEN'
+BOT_TOKEN = 'YOUR_BOT_TOKEN'
 
 logging.basicConfig(level=logging.INFO)
 
@@ -15,7 +15,7 @@ dp = Dispatcher()
 
 @dp.message(Command('start'))
 async def cmd_start(message: types.Message):
-	await message.answer('Привет! Я бот погоды. Напиши /show_weather [город]')
+	await message.answer('Hi! I am a weather bot. Write /show_weather [city]')
 
 
 async def get_weather(session, city):
@@ -30,10 +30,10 @@ async def get_weather(session, city):
 				return (0, f"{temp}")
 
 			else:
-				return (1, "Город не найден")
+				return (1, "City is not found")
 
 	except Exception as e:
-		return (1, f"Ошибка при получении данных: {str(e)}")
+		return (1, f"Data receiving error: {str(e)}")
 
 async def main_get(city):
 	async with aiohttp.ClientSession() as session:
@@ -51,12 +51,12 @@ async def show_weather(message: types.Message):
 
 		if error_check == 0:
 			temp = response[1]
-			await message.answer(f'Погода в городе {city} >> {temp}°C')	
+			await message.answer(f'The weather in city {city} >> {temp}°C')	
 
 	except IndexError:
-		await message.answer('Пожалуйста, укажите город после команды!\nПример: /show_weather Москва')
+		await message.answer('Please specify the city after the command!\n example: /show_weather Moscow')
 	except Exception as e:
-		await message.answer(f'Произошла ошибка: {str(e)}')
+		await message.answer(f'Error: {str(e)}')
 
 async def main():
 	await dp.start_polling(bot)
